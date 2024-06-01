@@ -1,4 +1,4 @@
-name: deploy
+name: build-code-server
 
 on:
   workflow_dispatch:
@@ -30,3 +30,4 @@ jobs:
           context: .
           push: true
           tags: ${{ env.registry }}/${{ env.targetRepo }}:latest
+
