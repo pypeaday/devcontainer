@@ -5,8 +5,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG PIP_INDX_URL
 ARG PY_VERSION="3.10.12"
 
-ARG GH_ACTIONS=false
-ENV GH_ACTIONS=${GH_ACTIONS}
 # TODO: what to do about podman?
 ENV DOCKER_HOST tcp://localhost:2375
 ENV PATH /app/code-server/bin:${PATH}

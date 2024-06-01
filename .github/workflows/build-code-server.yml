@@ -35,5 +35,3 @@ jobs:
           file: code-server.Dockerfile
           push: true
           tags: ${{ env.registry }}/${{ env.targetRepo }}:latest
-          build-args: |
-            GH_ACTIONS=true
