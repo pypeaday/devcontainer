@@ -1,0 +1,203 @@
+---
+- hosts: localhost
+  environment:
+    PATH: "{{ ansible_env.PATH }}:~/.local/bin"
+    DEFAULT_LOCAL_TMP: /tmp/.ansible
+  tasks:
+    - name: Update apt cache
+      become: true
+      apt:
+        update_cache: true
+
+    - name: Install necessary apt packages
+      become: true
+      apt:
+        name:
+          - build-essential
+          - curl
+          - direnv
+          - fd-find
+          - fzf
+          - git
+          - gnupg
+          - jq
+          - libbz2-dev
+          - libedit-dev
+          - libffi-dev
+          - libgeos-dev
+          - liblzma-dev
+          - libncurses5-dev
+          - libncursesw5
+          - libncursesw5-dev
+          - libreadline-dev
+          - libsqlite3-dev
+          - libssl-dev
+          - llvm
+          - make
+          - nodejs
+          - openssl
+          - postgresql-client
+          - python3
+          - python3-apt
+          - python3-distlib
+          - python3-distutils
+          - python3-distutils-extra
+          - python3-pip
+          - python3-setuptools
+          - python3-venv
+          - software-properties-common
+          - stow
+          - tk-dev
+          - unzip
+          - vim
+          - wget
+          - xz-utils
+          - zip
+          - zlib1g-dev
+          - zsh
+        state: present
+
+    - name: Import Microsoft GPG key
+      become: true
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: Add Visual Studio Code repository
+      become: true
+      apt_repository:
+        repo: deb [arch=amd64,arm64,armhf] http://packages.microsoft.com/repos/code stable main
+        state: present
+
+    - name: Update repositories cache and install Visual Studio Code
+      become: true
+      apt:
+        name: code
+        update_cache: yes
+        state: latest
+
+    - name: Clean up apt cache
+      become: true
+      apt:
+        autoclean: yes
+        autoremove: yes
+
+    - name: Remove temporary files
+      become: true
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/*
+        - /var/lib/apt/lists/*
+        - /var/tmp/*
+
+    - name: Change shell for a user
+      become: true
+      user:
+        name: "{{ ansible_user }}"
+        shell: /usr/bin/zsh
+
+    - name: Check if AWS CLI is installed
+      command: aws --version
+      register: aws_cli_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Download AWS CLI
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+      when: aws_cli_installed.rc != 0
+
+    - name: Unzip AWS CLI
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+      when: aws_cli_installed.rc != 0
+
+    - name: Install AWS CLI
+      command: /tmp/aws/install --update
+      become: true
+      when: aws_cli_installed.rc != 0
+
+    - name: Make local bin
+      ansible.builtin.file:
+        path: "$HOME/.local/bin"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Check if Oh My Zsh is installed
+      stat:
+        path: "~/.oh-my-zsh"
+      register: oh_my_zsh_installed
+
+    - name: Install Oh My ZSH
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/install_oh_my_zsh.sh
+      when: not oh_my_zsh_installed.stat.exists
+
+    - name: Run Oh My ZSH installer
+      shell: bash /tmp/install_oh_my_zsh.sh
+      when: not oh_my_zsh_installed.stat.exists
+
+    - name: Check if Starship is installed
+      command: starship --version
+      register: starship_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install Starship
+      get_url:
+        url: https://starship.rs/install.sh
+        dest: /tmp/install_starship.sh
+      when: starship_installed.rc != 0
+
+    - name: Run Starship installer
+      shell: sh /tmp/install_starship.sh -y -b $HOME/.local/bin
+      when: starship_installed.rc != 0
+
+    - name: Install pipx
+      pip:
+        name: pipx
+        state: present
+        executable: pip3
+
+    - name: Install yamlfmt with pipx
+      shell: $HOME/.local/bin/pipx install yamlfmt
+
+    - name: Check if pyenv is installed
+      stat:
+        path: "~/.pyenv"
+      register: pyenv_installed
+
+    - name: Clone pyenv repository
+      git:
+        repo: 'https://github.com/pyenv/pyenv.git'
+        dest: "~/.pyenv"
+      when: not pyenv_installed.stat.exists
+
+    - name: Ensure /opt/python-environments exists and is writable by vscode
+      become: true
+      ansible.builtin.file:
+        path: "/opt/python-environments"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Check if code-server is installed
+      command: which code-server
+      register: code_server_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Create symlink if code-server is installed
+      file:
+        src: /app/code-server/lib/vscode/bin/remote-cli/code-server
+        dest: ~/.local/bin/code
+        state: link
+      when: code_server_installed.rc == 0

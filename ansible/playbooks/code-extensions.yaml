@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  environment:
+    PATH: "{{ ansible_env.PATH }}:~/.local/bin"
+    DEFAULT_LOCAL_TMP: /tmp/.ansible
+  vars:
+    vscode_extensions:
+      - vscode-icons-team.vscode-icons
+      - tamasfe.even-better-toml
+      - mhutchie.git-graph
+      - alefragnani.project-manager
+      - ms-python.python
+      - charliermarsh.ruff
+      - Gruntfuggly.todo-tree
+      - redhat.vscode-yaml
+      - ms-azure-devops.azure-pipelines
+      - GitHub.copilot
+      - GitHub.copilot-chat
+      - christian-kohler.path-intellisense
+  tasks:
+  - name: Install Visual Studio Code extensions
+    command: code --install-extension {{ item }} 
+    loop: "{{ vscode_extensions }}"
