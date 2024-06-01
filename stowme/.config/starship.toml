@@ -10,10 +10,6 @@ error_symbol = "[✗](bold red)"     # used if previous command failed
 format = ''
 # format = '[$symbol \[$name\]]($style) '
 
-[env_var.RADA_ENVIRONMENT]
-default = "dev"
-format = '[🐹 (\($env_value\))]($style) '
-style = "fg:bright-yellow"
 
 [cmd_duration]
 min_time = 5_000                     # Show command duration over 5,000 milliseconds (=5 sec)
@@ -89,7 +85,7 @@ style = "bold green"
 style_user = "bold dimmed blue"
 show_always = true
 
-[custom.bash]
+[custom.zsh]
 when = '[[ ! -n "${VIRTUAL_ENV}" ]]'
 style = "bold red"
 format = '[🐍 NO PYTHON ENVIORNMENT SET ]($style)'
