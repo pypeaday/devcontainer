@@ -1,5 +1,5 @@
 FROM lscr.io/linuxserver/code-server:latest
-LABEL maintainer="payne_nicholas@cat.com"
+LABEL maintainer="Nicholas Payne"
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PIP_INDX_URL
