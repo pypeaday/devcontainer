@@ -1,0 +1,32 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #     - 'feature/*'
+
+env:
+  isMain: ${{ github.ref == 'refs/heads/main' }}
+  registry: docker.io
+  targetRepo: nicpayne713/devcontainer
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: 🐳 Docker Build
+        continue-on-error: true
+        run: |
+          docker build -t ${{ env.registry }}/${{ env.targetRepo }}:latest --build-arg GH_ACTIONS=true -f devcontainer.Dockerfile .
+
+      - name: 🐳 Docker Push Devcontainer Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ env.registry }}/${{ env.targetRepo }}:latest
