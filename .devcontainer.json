@@ -1,0 +1,4 @@
+{
+  "image": "docker.io/pypeaday/devcontainer:latest",
+  "workspaceFolder": "/workspaces"
+}

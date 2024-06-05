@@ -42,7 +42,7 @@ check_git_config() {
 
 
 cc() {
-    cd && cd "$(fdfind -d 2 /workspaces /config/workspaces ~ | cut -c 1- | fzf )"
+    cd && cd "$(fdfind -d 2 /workspaces /config/workspace ~ | cut -c 1- | fzf )"
 }
 
 envrc() {

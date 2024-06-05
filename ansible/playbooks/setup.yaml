@@ -127,7 +127,7 @@
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: '0755'
+        mode: "0755"
 
     - name: Check if Oh My Zsh is installed
       stat:
@@ -176,9 +176,20 @@
 
     - name: Clone pyenv repository
       git:
-        repo: 'https://github.com/pyenv/pyenv.git'
+        repo: "https://github.com/pyenv/pyenv.git"
         dest: "~/.pyenv"
       when: not pyenv_installed.stat.exists
+
+    - name: Install pyenv
+      shell: |
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init -)"
+        # TODO: parameterize python version? What's the purpose of installing this one...
+        ~/.pyenv/bin/pyenv install --skip-existing 3.10.12
+        pyenv global 3.10.12
+      # TODO: not sure what to do about pyenv with my devcontainer
+      when: false
 
     - name: Ensure /opt/python-environments exists and is writable by vscode
       become: true
@@ -187,7 +198,7 @@
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: '0755'
+        mode: "0755"
 
     - name: Check if code-server is installed
       command: which code-server
