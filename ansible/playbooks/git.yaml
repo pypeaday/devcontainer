@@ -1,16 +1,16 @@
 ---
 - hosts: localhost
   gather_facts: false
-  # vars:
-  #   git_user_name: "Albus Dumbledore"
-  #   git_user_email: "headmaster@hogwarts.magic"
-  vars_prompt:
-    - name: "git_user_name"
-      prompt: "What is your git user name?"
-      private: false
-    - name: "git_user_email"
-      prompt: "What is your git user email?"
-      private: false
+  vars:
+    git_user_name: "pypeaday"
+    git_user_email: "pypeaday@pype.dev"
+  # vars_prompt:
+  #   - name: "git_user_name"
+  #     prompt: "What is your git user name?"
+  #     private: false
+  #   - name: "git_user_email"
+  #     prompt: "What is your git user email?"
+  #     private: false
   tasks:
     - name: Set git config values
       git_config:
@@ -18,8 +18,9 @@
         name: "{{ item.name }}"
         value: "{{ item.value }}"
       loop:
-        - { name: 'user.name', value: "{{ git_user_name }}" }
-        - { name: 'user.email', value: "{{ git_user_email }}" }
-        - { name: 'credential.helper', value: "store" }
-        - { name: 'safe.directory', value: "/home/vscode/dotfiles" }
-        - { name: 'init.defaultBranch', value: "main" }
+        - { name: "user.name", value: "{{ git_user_name }}" }
+        - { name: "user.email", value: "{{ git_user_email }}" }
+        - { name: "credential.helper", value: "store" }
+        - { name: "safe.directory", value: "/home/vscode/devcontainer" }
+        - { name: "init.defaultBranch", value: "main" }
+

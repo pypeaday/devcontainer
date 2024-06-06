@@ -14,10 +14,11 @@
       - Gruntfuggly.todo-tree
       - redhat.vscode-yaml
       - ms-azure-devops.azure-pipelines
-      - GitHub.copilot
-      - GitHub.copilot-chat
       - christian-kohler.path-intellisense
+      - ms-azuretools.vscode-docker
+      - Codeium.codeium
   tasks:
-  - name: Install Visual Studio Code extensions
-    command: code --install-extension {{ item }} 
-    loop: "{{ vscode_extensions }}"
+    - name: Install Visual Studio Code extensions
+      command: code --install-extension {{ item }}
+      loop: "{{ vscode_extensions }}"
+

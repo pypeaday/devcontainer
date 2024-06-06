@@ -16,7 +16,7 @@ EXPOSE 8443
 RUN apt-get update && apt-get install -y sudo \
   && echo "abc ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/abc
 
-WORKDIR /config/dotfiles
+WORKDIR /config/devcontainer
 USER abc
 # try sudo chowning as abc?
 RUN sudo chown -R abc:abc /config

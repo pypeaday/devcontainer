@@ -169,6 +169,9 @@
     - name: Install yamlfmt with pipx
       shell: $HOME/.local/bin/pipx install yamlfmt
 
+    - name: Install hatch with pipx
+      shell: $HOME/.local/bin/pipx install hatch
+
     - name: Check if pyenv is installed
       stat:
         path: "~/.pyenv"
