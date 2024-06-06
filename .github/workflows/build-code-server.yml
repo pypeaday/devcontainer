@@ -2,9 +2,9 @@ name: build-code-server
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   #     - 'feature/*'
 
 jobs:
