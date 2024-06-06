@@ -10,3 +10,11 @@ build-devcontainer:
 push-devcontainer:
   #!/bin/bash
   docker push pypeaday/devcontainer
+encrypt:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  ansible-vault encrypt stowme/.ssh/id_rsa --vault-password-file key
+decrypt:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  ansible-vault decrypt stowme/.ssh/id_rsa --vault-password-file key

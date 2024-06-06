@@ -16,13 +16,6 @@ source $ZSH/oh-my-zsh.sh
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
-alias aws2=/usr/local/bin/aws
-alias src='source ~/.zshrc'
-
-eval "$(starship init zsh)"
-eval "$(pyenv init --path)" > /dev/null
-
-eval "$(direnv hook zsh)"
 # gitignore
 function gi() { curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
 
@@ -36,13 +29,13 @@ check_git_config() {
         echo -e "\e[1;31m|   Git username is not set.       |\e[0m"
         echo -e "\e[1;31m|   Running Ansible playbook!   |\e[0m"
         echo -e "\e[1;31m-------------------------------------\e[0m"
-        ansible-playbook $HOME/dotfiles/ansible/playbooks/git.yaml
+        ansible-playbook $HOME/devcontainer/ansible/playbooks/git.yaml
     fi
 }
 
 
 cc() {
-    cd && cd "$(fdfind -d 2 /workspaces /config/workspace ~ | cut -c 1- | fzf )"
+  cd && cd "$(fdfind . --full-path $(if [ -d /workspaces ][ then echo /workspaces[ else echo /config/workspace[ fi) ~ -d 2   | cut -c 1- | fzf )"
 }
 
 envrc() {
@@ -53,6 +46,7 @@ activate-venv () {
     export ENV_DIR=$(ls /opt/python-environments | fzf)
     source /opt/python-environments/$ENV_DIR/bin/activate
 }
+
 
 new-venv () {
     # Ask user for name of venv
@@ -93,7 +87,7 @@ hello() {
 }
 
 setup-code() {
-    ansible-playbook $HOME/dotfiles/ansible/playbooks/code-extensions.yaml
+    ansible-playbook $HOME/devcontainer/ansible/playbooks/code-extensions.yaml
 }
 
 
@@ -118,5 +112,14 @@ get-started() {
     echo "   so if you named your venv 'foo', then the path to input would be '/opt/python-environments/foo/bin/python'."
     echo "   Notice the '/bin/python' at the end."
 }
+
+alias aws2=/usr/local/bin/aws
+alias src='source ~/.zshrc'
+alias av=activate-venv
+alias nv=new-venv
+
+eval "$(starship init zsh)"
+eval "$(pyenv init --path)" > /dev/null
+eval "$(direnv hook zsh)"
 
 hello

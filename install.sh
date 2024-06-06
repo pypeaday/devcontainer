@@ -24,6 +24,3 @@ stow stowme -t $HOME
 echo "Setting permissions..."
 sudo chown -R $(whoami):$(whoami) $HOME
 
-echo "Launching zsh..."
-zsh
-
