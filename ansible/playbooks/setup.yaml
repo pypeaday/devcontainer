@@ -215,3 +215,6 @@
         dest: ~/.local/bin/code
         state: link
       when: code_server_installed.rc == 0
+
+    - name: Install just
+      shell: curl -sL https://just.systems/install.sh | bash -s -- --to $HOME/.local/bin
