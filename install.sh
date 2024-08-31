@@ -14,6 +14,7 @@ sudo apt install ansible -y
 
 echo "Running Ansible playbook for setup..."
 ansible-playbook -e ansible_user=$(whoami) ./ansible/playbooks/setup.yaml -vvv
+ansible-playbook -e ansible_user=$(whoami) ./ansible/playbooks/nvim.yaml -vvv
 
 echo "Backing up ~/.zshrc..."
 mv ~/.zshrc ~/.zshrc.bak || echo "Failed to backup ~/.zshrc"

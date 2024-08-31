@@ -16,6 +16,9 @@ source $ZSH/oh-my-zsh.sh
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
+# for neovim
+export PATH="$PATH:/opt/nvim-linux64/bin"
+
 # gitignore
 function gi() { curl -sLw n https://www.toptal.com/developers/gitignore/api/$@ ;}
 
