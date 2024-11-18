@@ -14,5 +14,7 @@ WORKDIR /home/vscode/devcontainer
 COPY . .
 
 RUN ./install.sh
+WORKDIR /opt/docker
+COPY --from=docker:dind /usr/local/bin/docker /opt/docker
 
 WORKDIR /workspaces
